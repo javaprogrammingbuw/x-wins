@@ -169,6 +169,7 @@ public class Gui extends JFrame{
 		int s1 = 0, s2 = 0; //counter for player 1 und 2
 		
 		// horizontal check
+		// delete one for loop
 		for (int i = y; i <rowInt ; i++) { // y direction
 			for (int j = x; j < colInt; j++) {// x direction
 				if (state[i][j]==true && turn== true){
@@ -179,7 +180,7 @@ public class Gui extends JFrame{
 							
 						}
 						else {
-							s1=0;
+							s1=0; //necesary?
 						}
 					}
 				}
@@ -187,6 +188,7 @@ public class Gui extends JFrame{
 					s1=0;
 				}
 				
+				//think about where to place this if condition
 				if(s1==stnInt) {
 					JOptionPane.showMessageDialog (null, "red won!");
 					
@@ -256,6 +258,9 @@ public class Gui extends JFrame{
 		}
 		
 		// diagonal check left top to right bottom
+		//Two Options:
+		//A: 1 Up 1 Down
+		//B: Calc top left position and then check for whole grid
 		for (int i = y; i < rowInt; i++) { // y direction
 			for (int j = x; j < colInt; j++) {//// x direction
 				if (state[i][j]==true && turn == true ){
@@ -299,6 +304,7 @@ public class Gui extends JFrame{
 		}
 		
 		// diagonal check right top to left bottom
+		//Hint: Look at MagicSquare Exercise from Java Programming Class
 		for (int i = 0; i < rowInt; i++) { // y direction
 			for (int j = 0; j < colInt; j++) {// x direction
 				if (state[i][j]==true && turn == true){
