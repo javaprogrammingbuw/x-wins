@@ -26,8 +26,8 @@ public class Gui extends JFrame{
 	private String stn;
 	private JButton[][] squares;
 	private boolean [][] state;
-	private boolean turn;
-	
+	private boolean  turn;
+	private int [][] color;
 	public Gui(){
 		initUi();
 	}
@@ -60,6 +60,7 @@ public class Gui extends JFrame{
 			stnInt=Integer.parseInt(stn);
 			squares=new JButton[rowInt][colInt];
 			state= new boolean[rowInt][colInt];
+			color= new int [rowInt][colInt];
 		   initField(rowInt,colInt,stnInt);
 		   
 		});
@@ -91,7 +92,7 @@ public class Gui extends JFrame{
 		outputPane.setBorder(new LineBorder(Color.BLACK));
 
 		for (int i = 0; i < squares.length; i++) {
-                 for (int j = 0; j < squares[i].length; j++) {
+            for (int j = 0; j < squares[i].length; j++) {
                 JButton b = new JButton();
                 ImageIcon icon = new ImageIcon(
                 new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
@@ -101,17 +102,17 @@ public class Gui extends JFrame{
                  
                  squares[j][i]=b;
                  state [j][i]=false;   
-
+                 color[j][i]=0;
                 b.addActionListener((event) -> {
-    			 addStone(b,x,y);
+                	         addStone(b,x,y);
              	
-           	});
+                });
              
                 b.setIcon(icon);
                 b.setBackground(Color.BLUE);
                 outputPane.add(squares[j][i]);
-                  }
-                }
+            }
+		}
   
       
         contentPane.add(outputPane);
@@ -130,225 +131,260 @@ public class Gui extends JFrame{
       	g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     
       
-   		 for ( int r=y;r<=squares.length-1;r++) {
+   	 for ( int r=y;r<=squares.length-1;r++) {
  		
-   			 if(state[x][r]==false) {
-	 	 	 b=squares[x][r];
-	 	 	 y = r;
-   			}
-   		}
+   		 if(state[x][r]==false) {
+	 	  b=squares[x][r];
+	 	  y = r;
+   		 }
+   	}
    	 
     
    	 
-	  	if(!turn){
+		if(!turn){
 		
       		g2.setColor(Color.RED);
       		state[x][y] = true;
       		turn = true;
-      	
+      	    color[x][y]=1;
       	  
-      		}
+      	}
       		else{
       		
       		g2.setColor(Color.YELLOW);
       		state[x][y] = true;
       		turn = false;
-      		
+      		color[x][y]=2;
       	
-   	 	}
+      		}
 		
       	g2.fillOval(4,4,95,95);
       	g2.dispose();
       	b.setIcon(new ImageIcon(circleImg));
    	    b.setVisible(true);
-   	    getWinner(x,y);
-	}
-	
+//   	    checkVertikal(b,x,y);
+//   	 hasWon(x,y);
+//   	    horizontal(x,y);
+//   	    vertical(x,y);
+//   	    diagonal1(x,y);
+//    	    diagonal2(x,y);
+   	      getWinner(x,y);
+	 }
 	void getWinner(int x,int y) { 	
 
 		int s1 = 0, s2 = 0; //counter for player 1 und 2
 		
 		// horizontal check
 		// delete one for loop
-		for (int i = y; i <rowInt ; i++) { // y direction
-			for (int j = x; j < colInt; j++) {// x direction
-				if (state[i][j]==true && turn== true){
+		for (int i = 0; i <rowInt ; i++) { // y direction
+			
+				if (state[i][y]==true && color [i][y]==1){
 					s1+=1;
 					for (int h = 1; h<stnInt; h++){
-						if (i+h<rowInt && state[i+h][j]==true && turn == true ) {
+						if (i+h<rowInt && state[i+h][y]==true && color [i+h][y]==1 ) {
 							s1+=1;
 							
 						}
-						else {
+						 	else {
 							s1=0; //necesary?
-						}
+						 	}
 					}
 				}
-				else {
+					else {
 					s1=0;
-				}
+					}
 				
 				//think about where to place this if condition
 				if(s1==stnInt) {
 					JOptionPane.showMessageDialog (null, "red won!");
+					this.getContentPane().removeAll();
+					initUi();
+				
 					
 				}
 				
-		if (state[i][j]==true && turn == false ){
+		if (state[i][y]==true && color[i][y]==2  ){
 					s2+=1;
 					for (int h = 1; h<stnInt; h++){
-						if (i+h<rowInt && state [i+h][j]==true && turn == false ) {
+						if (i+h<rowInt && state [i+h][y]==true && color[i+h][y]==2 ) {
 							s2+=1;
 						}
-						else {
+							else {
 							s2=0;
-						}
+							}
 					}
 				}
-				else {
+					else {
 					s2=0;
-				}
+					}
 				if(s2==stnInt) {
 					JOptionPane.showMessageDialog (null, "yellow won!");
+					this.getContentPane().removeAll();
+					initUi();
+				
 					
 				}
-			}	
-		}
+			}
+		
+		
 		// vertical check
-		for (int i = y; i < rowInt; i++) { // y direction
-			for (int j = x; j < colInt; j++) {// x direction
-				if (state[i][j]==true && turn == true ){
-					s1+=1;
-					for (int h = 1; h<stnInt; h++){
-						if (j+h<colInt && state[i][j+h]==true && turn == true ) {
+				
+					for (int j = 0; j < colInt; j++) {// x direction
+						if (state[x][j]==true && color[x][j]==1 ){
 							s1+=1;
+							for (int h = 1; h<stnInt; h++){
+								if (j+h<colInt && state[x][j+h]==true && color[x][j+h]==1) {
+									s1+=1;
+								}
+									else {
+									s1=0;
+									}
+							}
 						}
-						else {
+							else {
 							s1=0;
+							}
+						if(s1==stnInt) {
+							JOptionPane.showMessageDialog (null, "red won!");
+							this.getContentPane().removeAll();
+							initUi();
+							
+							
 						}
-					}
-				}
-				else {
-					s1=0;
-				}
-				if(s1==stnInt) {
-					JOptionPane.showMessageDialog (null, "red won!");
-				}
-				
-				
-				if (state[i][j]==true && turn == false  ){
-					s2+=1;
-					for (int h = 1; h<stnInt; h++){
-						if (j+h<colInt && state[i][j+h]==true && turn == false) {
+						
+						
+						if (state[x][j]==true && color[x][j]==2  ){
 							s2+=1;
+							for (int h = 1; h<stnInt; h++){
+								if (j+h<colInt && state[x][j+h]==true && color [x][j+h]==2) {
+									s2+=1;
+								}
+									else {
+									s2=0;
+									}
+							}
 						}
-						else {
+							else {
 							s2=0;
+							}
+						if(s2==stnInt) {
+							JOptionPane.showMessageDialog (null, "yellow won!");
+							this.getContentPane().removeAll();
+							initUi();
+						
 						}
-					}
-				}
-				else {
-					s2=0;
-				}
-				if(s2==stnInt) {
-					JOptionPane.showMessageDialog (null, "yellow won!");
-				}
+						
+					}	
 				
-			}	
-		}
-		
-		// diagonal check left top to right bottom
-		//Two Options:
-		//A: 1 Up 1 Down
-		//B: Calc top left position and then check for whole grid
-		for (int i = y; i < rowInt; i++) { // y direction
-			for (int j = x; j < colInt; j++) {//// x direction
-				if (state[i][j]==true && turn == true ){
-					s1+=1;
-					for (int h = 1; h<stnInt; h++){
-						if (j+h<colInt && i+h<rowInt && state [i+h][j+h]==true && turn ==true  ) {
+	
+//				// diagonal check left top to right bottom
+//				//Two Options:
+//				//A: 1 Up 1 Down
+//				//B: Calc top left position and then check for whole grid
+				for (int i = 0; i < rowInt; i++) { // y direction
+					for (int j = 0; j < colInt; j++) {//// x direction
+						if (state[i][j]==true && color [i][j]==1 ){
 							s1+=1;
+							for (int h = 1; h<stnInt; h++){
+								if (j+h<colInt && i+h<rowInt && state [i+h][j+h]==true && color [i+h][j+h]==1) {
+									s1+=1;
+								}
+								else {
+									s1=0;
+								}
+							}
 						}
-						else {
+							else {
 							s1=0;
+							}
+						if(s1==stnInt) {
+							JOptionPane.showMessageDialog (null, "red won!");
+							this.getContentPane().removeAll();
+							initUi();
+							
+							
 						}
-					}
-				}
-				else {
-					s1=0;
-				}
-				if(s1==stnInt) {
-					JOptionPane.showMessageDialog (null, "red won!");
-				}
-			
-				
-				if (state[i][j]==true && turn == false ){
-					s2+=1;
-					for (int h = 1; h<stnInt; h++){
-						if (j+h<colInt &&i+h<rowInt&& state [i+h][j+h]==true && turn == false ) {
+					
+						
+						if (state[i][j]==true && color [i][j]==2){
 							s2+=1;
+							for (int h = 1; h<stnInt; h++){
+								if (j+h<colInt &&i+h<rowInt&& state [i+h][j+h]==true && color [i+h][j+h]==2 ) {
+									s2+=1;
+								}
+									else {
+									s2=0;
+									}
+							}
 						}
-						else {
+							else {
 							s2=0;
+							}
+						if(s2==stnInt) {
+							JOptionPane.showMessageDialog (null, "yellow won!");
+							this.getContentPane().removeAll();
+							initUi();
+							
 						}
-					}
+					
+					}	
 				}
-				else {
-					s2=0;
-				}
-				if(s2==stnInt) {
-					JOptionPane.showMessageDialog (null, "yellow won!");
-				}
-			
-			}	
-		}
-		
-		// diagonal check right top to left bottom
-		//Hint: Look at MagicSquare Exercise from Java Programming Class
-		for (int i = 0; i < rowInt; i++) { // y direction
-			for (int j = 0; j < colInt; j++) {// x direction
-				if (state[i][j]==true && turn == true){
-					s1+=1;
-					for (int h = 1; h<stnInt; h++){
-						if (j-h>0 && i+h<7 && state[i+h][j-h]==true && turn ==true) {
+   	
+//				// diagonal check right top to left bottom
+//				//Hint: Look at MagicSquare Exercise from Java Programming Class
+				for (int i = 0; i < rowInt; i++) { // y direction
+					for (int j = 0; j < colInt; j++) {// x direction
+						if (state[i][j]==true && color[i][j]==1){
 							s1+=1;
+							for (int h = 1; h<stnInt; h++){
+								if (j-h>0 && i+h<colInt && state[i+h][j-h]==true && color [i+h][j-h]==1) {
+									s1+=1;
+								}
+									else {
+									s1=0;
+									}
+							}
 						}
-						else {
+							else {
 							s1=0;
+							}
+						if(s1==stnInt) {
+							JOptionPane.showMessageDialog (null, "red won!");
+							this.getContentPane().removeAll();
+							initUi();
+							
+							
+							
 						}
-					}
-				}
-				else {
-					s1=0;
-				}
-				if(s1==stnInt) {
-					JOptionPane.showMessageDialog (null, "red won!");
-				}
-			
-				
-				if (state[i][j]==true && turn == false ){
-					s2+=1;
-					for (int h = 1; h<stnInt; h++){
-						if (j-h>0 &&i+h<7 && state [i+h][j-h]==true && turn == false ) {
+					
+						
+						if (state[i][j]==true && color [i][j]==2 ){
 							s2+=1;
+							for (int h = 1; h<stnInt; h++){
+								if (j-h>0 && i+h<colInt && state [i+h][j-h]==true && color [i+h][j-h]==2 ) {
+									s2+=1;
+								}
+									else {
+									s2=0;
+									}
+							}
 						}
-						else {
+							else {
 							s2=0;
+							}
+						if(s2==stnInt) {
+							JOptionPane.showMessageDialog (null, "yellow won!");
+							this.getContentPane().removeAll();
+							initUi();
+							
+							
 						}
-					}
-				}
-				else {
-					s2=0;
-				}
-				if(s2==stnInt) {
-					JOptionPane.showMessageDialog (null, "yellow won!");
+						
+					}	
 				}
 				
-			}	
-		}
+			}
 		
-	}
-
 
 	public static void main(String[] args){
 		EventQueue.invokeLater(() ->{
