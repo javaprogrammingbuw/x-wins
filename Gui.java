@@ -31,7 +31,8 @@ public class Gui extends JFrame{
 	public Gui(){
 		initUi();
 	}
-
+	
+// To initialize the required JFrame objects like button,textbox etc.
 	public void initUi(){
 		contentPane = (JPanel) getContentPane();
 
@@ -46,11 +47,7 @@ public class Gui extends JFrame{
 		tf3.setText("0");
 		
 		calcBtn = new JButton("Compute");
-		
-		
-		
-		
-		//Todo: Thing about how to adjust the parameters
+	
 		calcBtn.addActionListener((event) ->{
 			row = tf1.getText();
 			rowInt=Integer.parseInt(row);
@@ -82,7 +79,7 @@ public class Gui extends JFrame{
         //Close Application when window is closed
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
-
+// To create a feild of buttons.
 	private void initField(int width, int height, int stones){
 		
 		
@@ -121,9 +118,7 @@ public class Gui extends JFrame{
         pack();
 	}
 
-    
-	
-
+    //To add stones to a lowest possible row of a column.
 	
 	private void addStone(JButton  b,int x,int y){
 		BufferedImage circleImg = new BufferedImage(100,100, BufferedImage.TYPE_INT_ARGB);
@@ -162,12 +157,6 @@ public class Gui extends JFrame{
       	g2.dispose();
       	b.setIcon(new ImageIcon(circleImg));
    	    b.setVisible(true);
-//   	    checkVertikal(b,x,y);
-//   	 hasWon(x,y);
-//   	    horizontal(x,y);
-//   	    vertical(x,y);
-//   	    diagonal1(x,y);
-//    	    diagonal2(x,y);
    	      getWinner(x,y);
 	 }
 	void getWinner(int x,int y) { 	
@@ -175,7 +164,7 @@ public class Gui extends JFrame{
 		int s1 = 0, s2 = 0; //counter for player 1 und 2
 		
 		// horizontal check
-		// delete one for loop
+
 		for (int i = 0; i <rowInt ; i++) { // y direction
 			
 				if (state[i][y]==true && color [i][y]==1){
@@ -194,7 +183,6 @@ public class Gui extends JFrame{
 					s1=0;
 					}
 				
-				//think about where to place this if condition
 				if(s1==stnInt) {
 					JOptionPane.showMessageDialog (null, "red won!");
 					this.getContentPane().removeAll();
@@ -277,10 +265,8 @@ public class Gui extends JFrame{
 					}	
 				
 	
-//				// diagonal check left top to right bottom
-//				//Two Options:
-//				//A: 1 Up 1 Down
-//				//B: Calc top left position and then check for whole grid
+			// diagonal check left top to right bottom
+
 				for (int i = 0; i < rowInt; i++) { // y direction
 					for (int j = 0; j < colInt; j++) {//// x direction
 						if (state[i][j]==true && color [i][j]==1 ){
@@ -330,8 +316,7 @@ public class Gui extends JFrame{
 					}	
 				}
    	
-//				// diagonal check right top to left bottom
-//				//Hint: Look at MagicSquare Exercise from Java Programming Class
+			// diagonal check right top to left bottom
 				for (int i = 0; i < rowInt; i++) { // y direction
 					for (int j = 0; j < colInt; j++) {// x direction
 						if (state[i][j]==true && color[i][j]==1){
